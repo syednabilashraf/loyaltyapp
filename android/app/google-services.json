@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "745307520569",
+    "firebase_url": "https://loyaltyapp-17fbc.firebaseio.com",
+    "project_id": "loyaltyapp-17fbc",
+    "storage_bucket": "loyaltyapp-17fbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745307520569:android:b02c41fee1cb03888b17e8",
+        "android_client_info": {
+          "package_name": "com.noscoper.loyaltyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745307520569-jjcr4p3slsh3hnc5aj3b232k38cquqdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBRwkxc-oxb5tmACwdv98qzHfCY1YoSuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745307520569-jjcr4p3slsh3hnc5aj3b232k38cquqdo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745307520569:android:668cecabbf3f3e738b17e8",
+        "android_client_info": {
+          "package_name": "com.noscoper.loyaltyapprestaurant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745307520569-jjcr4p3slsh3hnc5aj3b232k38cquqdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBRwkxc-oxb5tmACwdv98qzHfCY1YoSuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745307520569-jjcr4p3slsh3hnc5aj3b232k38cquqdo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745307520569:android:8596688f04606aa88b17e8",
+        "android_client_info": {
+          "package_name": "com.noscoper.loyaltyappversion2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745307520569-jjcr4p3slsh3hnc5aj3b232k38cquqdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBRwkxc-oxb5tmACwdv98qzHfCY1YoSuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745307520569-jjcr4p3slsh3hnc5aj3b232k38cquqdo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
