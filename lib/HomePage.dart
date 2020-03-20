@@ -9,9 +9,13 @@ import 'package:loyaltyappversion2/AllRestaurants.dart';
 import 'package:loyaltyappversion2/MyRestaurants.dart';
 import 'package:loyaltyappversion2/History.dart';
 import 'package:loyaltyappversion2/Profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class HomePage extends StatefulWidget {
 
+  const HomePage({Key key, this.user}) : super(key: key);
+  final AuthResult user;
   @override
   _HomePageState createState() => _HomePageState();
 }
