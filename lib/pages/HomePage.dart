@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loyaltyappversion2/register.page.dart';
-import 'package:http/http.dart';
-import 'dart:convert';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:loyaltyappversion2/HomePage.dart';
-import 'package:loyaltyappversion2/GetPoints.dart';
-import 'package:loyaltyappversion2/AllRestaurants.dart';
-import 'package:loyaltyappversion2/MyRestaurants.dart';
-import 'package:loyaltyappversion2/History.dart';
-import 'package:loyaltyappversion2/Profile.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 

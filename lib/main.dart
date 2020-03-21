@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:loyaltyappversion2/register.page.dart';
+import 'package:loyaltyappversion2/pages/register.page.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:loyaltyappversion2/HomePage.dart';
-import 'package:loyaltyappversion2/GetPoints.dart';
-import 'package:loyaltyappversion2/AllRestaurants.dart';
-import 'package:loyaltyappversion2/MyRestaurants.dart';
-import 'package:loyaltyappversion2/History.dart';
-import 'package:loyaltyappversion2/Profile.dart';
+import 'package:loyaltyappversion2/pages/HomePage.dart';
+import 'package:loyaltyappversion2/pages/GetPoints.dart';
+import 'package:loyaltyappversion2/pages/AllRestaurants.dart';
+import 'package:loyaltyappversion2/pages/MyRestaurants.dart';
+import 'package:loyaltyappversion2/pages/History.dart';
+import 'package:loyaltyappversion2/pages/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:loyaltyappversion2/firebase_services/authentication.dart';
+import 'package:loyaltyappversion2/firebase_services/database.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: Register(),
+    home: AllRestaurants(),
 //    initialRoute: '/home',
     routes: {
       '/loginpage': (context) => LoginPage(),
@@ -32,74 +33,6 @@ void main() {
 //    routes: '/': (context)=>,
   ));
 }
-
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
-
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController _controller;
-
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: TextField(
-          controller: _controller,
-          onSubmitted: (String value) async {
-            await showDialog<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Thanks!'),
-                  content: Text('You typed "$value".'),
-                  actions: <Widget>[
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-
-//void main() => runApp(MyApp());
-//
-//class MyApp extends StatelessWidget {
-//  // This widget is the root of your application.
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      title: 'Flutter Demo',
-//      theme: ThemeData(
-//        primarySwatch: Colors.blue,
-//      ),
-//      home: FirestoreCRUDPage(),
-//    );
-//  }
-//}
 
 class FirestoreCRUDPage extends StatefulWidget {
   @override
@@ -202,8 +135,10 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
               if (snapshot.hasData) {
                 print('yoyoyoy');
 
-                return Column(children: snapshot.data.documents.map((doc) =>
-                    buildItem(doc)).toList());
+                return Column(
+                    children: snapshot.data.documents
+                        .map((doc) => buildItem(doc))
+                        .toList());
               } else {
                 return SizedBox();
               }
@@ -217,8 +152,8 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
   void createData() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      DocumentReference ref = await db.collection('CRUD').add(
-          {'name': '$name 😎'});
+      DocumentReference ref =
+          await db.collection('CRUD').add({'name': '$name 😎'});
       setState(() => id = ref.documentID);
       print(ref.documentID);
     }
@@ -237,52 +172,39 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
     await db.collection('CRUD').document(doc.documentID).delete();
     setState(() => id = null);
   }
-
-
 }
-
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-
 class _LoginPageState extends State<LoginPage> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email, _password;
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         child: Form(
-        key:_formKey,
-
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[Container(
-                child: Stack(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    child: Stack(
                   children: <Widget>[
                     Container(
                         padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
-                        child: Text(
-                            'no', style: TextStyle(
-                            fontSize: 80.0, fontWeight: FontWeight.bold)
-
-                        )
-                    ),
+                        child: Text('no',
+                            style: TextStyle(
+                                fontSize: 80.0, fontWeight: FontWeight.bold))),
                     Container(
                         padding: EdgeInsets.fromLTRB(16.0, 175.0, 0.0, 0.0),
-                        child: Text(
-                            'scoper', style: TextStyle(
-                            fontSize: 80.0, fontWeight: FontWeight.bold)
-
-                        )
-                    ),
+                        child: Text('scoper',
+                            style: TextStyle(
+                                fontSize: 80.0, fontWeight: FontWeight.bold))),
 //              Container(
 //                  padding:EdgeInsets.fromLTRB(240.0, 175.0, 0.0, 0.0),
 //                  child: Text(
@@ -291,157 +213,150 @@ class _LoginPageState extends State<LoginPage> {
 //                  )
 //              )
                   ],
-                )
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 35.0, left: 20, right: 20),
-              child: Column(children: <Widget>[
-              TextFormField(
-        onSaved: (input) => _email = input,
-
-              decoration: InputDecoration(
-                labelText: 'EMAIL',
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                ),
-
-              ),
-            ),
-            SizedBox(height: 20.0),
-            TextFormField(
-        onSaved: (input) => _password = input,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                ),
-
-              ),
-              obscureText: true,
-            ),
-            SizedBox(height: 5.0),
-            Container(
-              alignment: Alignment(1.0, 0.0),
-              padding: EdgeInsets.only(top: 15.0, left: 20.0),
-              child: InkWell(
-                child: Text('Forgot Password',
-                  style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline
-                  ),),
-              ),
-            ),
-            SizedBox(height: 40.0),
-            Container(
-                height: 40.0,
-                child: Material(
-                    borderRadius: BorderRadius.circular(20.0),
-                    shadowColor: Colors.greenAccent,
-                    color: Colors.green,
-                    elevation: 7.0,
-                    child:
-                    GestureDetector(
-                        onTap: () {
-                          signIn();
-                        },
-                        child: Center(
-                          child: Text(''
-                              'LOGIN',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),),
-                        )
-                    )
-                )
-            ),
-            SizedBox(height: 20.0),
-            Container(height: 40.0,
-                color: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      style: BorderStyle.solid,
-                      width: 1.0,
-                    ),
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                )),
+                Container(
+                  padding: EdgeInsets.only(top: 35.0, left: 20, right: 20),
+                  child: Column(
                     children: <Widget>[
-                      Center(
-                        child: ImageIcon(AssetImage('assets/facebook.png'),
-                            color: Colors.black),
+                      TextFormField(
+                        onSaved: (input) => _email = input,
+                        decoration: InputDecoration(
+                          labelText: 'EMAIL',
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
                       ),
-                      SizedBox(width: 10.0,),
-                      Center(child: Text('Login with Facebook',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                      SizedBox(height: 20.0),
+                      TextFormField(
+                        onSaved: (input) => _password = input,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                        ),
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 5.0),
+                      Container(
+                        alignment: Alignment(1.0, 0.0),
+                        padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                        child: InkWell(
+                          child: Text(
+                            'Forgot Password',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 40.0),
+                      Container(
+                          height: 40.0,
+                          child: Material(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shadowColor: Colors.greenAccent,
+                              color: Colors.green,
+                              elevation: 7.0,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    signIn();
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      ''
+                                      'LOGIN',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )))),
+                      SizedBox(height: 20.0),
+                      Container(
+                          height: 40.0,
+                          color: Colors.transparent,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black,
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Center(
+                                  child: ImageIcon(
+                                      AssetImage('assets/facebook.png'),
+                                      color: Colors.black),
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Login with Facebook',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
 
 //          fontFamily: 'Monyserrat',
-                        ),),),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))
                     ],
                   ),
-
-
-                )
-            )
-            ],
-          ),
-        ),
-        SizedBox(height:15.0 ,),
-        Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-        Text(
-        'Don\'t have an account ?',
-        style: TextStyle(fontFamily: 'Montserrat'),
-        ),
-        SizedBox(width: 5.0),
-        InkWell(
-        onTap: () {
-        Navigator.of(context).pushNamed('/register');
-        },
-        child: Text(
-        'Register',
-        style: TextStyle(
-        color: Colors.green,
-        fontFamily: 'Montserrat',
-        fontWeight: FontWeight.bold,
-        decoration: TextDecoration.underline),
-        ),
-        )
-        ],
-        ),
-        ],
-        )
-        ),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Don\'t have an account ?',
+                      style: TextStyle(fontFamily: 'Montserrat'),
+                    ),
+                    SizedBox(width: 5.0),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushNamed('/register');
+                      },
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            )),
       ),
     );
-
-
-
-
   }
 
   void signIn() async {
-    if(_formKey.currentState.validate()){
+    if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      try{
-        AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email.trim(), password: _password);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user)));
-      }catch(e){
+      try {
+        AuthResult user = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: _email.trim(), password: _password);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => HomePage(user: user)));
+      } catch (e) {
         print(e.message);
       }
     }
   }
-
 }
-
-
-
