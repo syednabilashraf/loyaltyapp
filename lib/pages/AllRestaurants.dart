@@ -12,7 +12,8 @@ class AllRestaurants extends StatefulWidget {
 class _AllRestaurantsState extends State<AllRestaurants> {
   final db = Firestore.instance;
 
-//  String userpoints;
+
+String userpoints;
 
   toto(DocumentSnapshot doc) {
 //    QuerySnapshot poc= await db.collection('userData').where('email',isEqualTo:'123@gmail.com').getDocuments();
