@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loyaltyappversion2/actors/user.dart';
 
 
 class HomePage extends StatefulWidget {
 
-  const HomePage({Key key, this.user}) : super(key: key);
-  final AuthResult user;
+
+
   @override
   _HomePageState createState() => _HomePageState();
 }

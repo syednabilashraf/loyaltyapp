@@ -17,6 +17,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
       appBar: new AppBar(),
       body: Form(
@@ -113,7 +114,7 @@ class _RegisterState extends State<Register> {
             .signInWithEmailAndPassword(
                 email: _email.trim(), password: _password);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => HomePage(user: user)));
+            MaterialPageRoute(builder: (context) => HomePage()));
       } catch (e) {
         print(e.message);
       }

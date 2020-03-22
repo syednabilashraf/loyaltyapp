@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loyaltyappversion2/firebase_services/authentication.dart';
 import 'package:loyaltyappversion2/firebase_services/database.dart';
+import 'package:loyaltyappversion2/actors/user.dart';
 
 class AllRestaurants extends StatefulWidget {
   @override
@@ -11,17 +12,23 @@ class AllRestaurants extends StatefulWidget {
 class _AllRestaurantsState extends State<AllRestaurants> {
   final db = Firestore.instance;
 
+//  String userpoints;
+
+  toto(DocumentSnapshot doc) {
+//    QuerySnapshot poc= await db.collection('userData').where('email',isEqualTo:'123@gmail.com').getDocuments();
+//    DocumentSnapshot dodo = poc.documents[0];
+//    print(dodo.documentID);
+//String docID=doc.documentID;
+//Stream <DocumentSnapshot> customerSnapshot=  db.document('/restaurantData/${docID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1').snapshots();
+//print(customerSnapshot.);
+  }
 
   Widget buildItem(DocumentSnapshot doc) {
-    print(doc.data['name']);
-    print(doc.documentID);
     return Card(
-
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-           ListTile(
-
+          ListTile(
             leading: Icon(Icons.album),
             title: Text(doc['name']),
             subtitle: Text(doc['type']),
@@ -30,20 +37,55 @@ class _AllRestaurantsState extends State<AllRestaurants> {
             children: <Widget>[
               FlatButton(
                 child: const Text('View Info'),
-                onPressed: () { /* ... */ },
+                onPressed: () {
+                  /* ... */
+                },
               ),
               FlatButton(
-                child: const Text('View points'),
-                onPressed: () { /* ... */ },
+                color: Colors.redAccent,
+                child:  StreamBuilder<DocumentSnapshot>(
+                  stream: db
+                      .document(
+                      '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      if (snapshot.data.exists) {
+                        return Text(snapshot.data.data['points']);
+                      }
+                      else{return SizedBox();}
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                ),
+                onPressed: () {
+                  /* ... */
+                },
               ),
             ],
+          ),
+//             gUj5ARd2rDdCaf7cQvSGeaziBWr1'
+          StreamBuilder<DocumentSnapshot>(
+            stream: db
+                .document(
+                    '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.data.exists) {
+                  return Text(snapshot.data.data['points']);
+                }
+                else{return SizedBox();}
+              } else {
+                return SizedBox();
+              }
+            },
           ),
         ],
       ),
     );
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -129,10 +171,11 @@ class _AllRestaurantsState extends State<AllRestaurants> {
             StreamBuilder<QuerySnapshot>(
               stream: db.collection('restaurantData').snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  print('yoyoyoy');
+                if (snapshot.hasData &&
+                    snapshot.connectionState == ConnectionState.active) {
+//                  print('yoyoyoy');
 
-                  return  Column(
+                  return Column(
                       children: snapshot.data.documents
                           .map((doc) => buildItem(doc))
                           .toList());
