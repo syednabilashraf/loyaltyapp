@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loyaltyappversion2/firebase_services/authentication.dart';
 import 'package:loyaltyappversion2/firebase_services/database.dart';
 import 'package:loyaltyappversion2/actors/user.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+
 
 class AllRestaurants extends StatefulWidget {
   @override
@@ -10,87 +13,169 @@ class AllRestaurants extends StatefulWidget {
 }
 
 class _AllRestaurantsState extends State<AllRestaurants> {
-  final db = Firestore.instance;
 
 
 String userpoints;
-
-  toto(DocumentSnapshot doc) {
+//
+//  toto(DocumentSnapshot doc) {
 //    QuerySnapshot poc= await db.collection('userData').where('email',isEqualTo:'123@gmail.com').getDocuments();
 //    DocumentSnapshot dodo = poc.documents[0];
 //    print(dodo.documentID);
 //String docID=doc.documentID;
-//Stream <DocumentSnapshot> customerSnapshot=  db.document('/restaurantData/${docID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1').snapshots();
+//Future <DocumentSnapshot> customerSnapshot=  db.document('/restaurantData/${docID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1').get();
 //print(customerSnapshot.);
-  }
+
+
+
+//    return Card(
+//      child: Column(
+//        mainAxisSize: MainAxisSize.min,
+//        children: <Widget>[
+//          ListTile(
+//            leading: Icon(Icons.album),
+//            title: Text(doc['name']),
+//            subtitle: Text(doc['type']),
+//          ),
+//          ButtonBar(
+//            children: <Widget>[
+//              FlatButton(
+//                child: const Text('View Info'),
+//                onPressed: () {
+//                  /* ... */
+//                },
+//              ),
+//              FlatButton(
+//                color: Colors.redAccent,
+//                child:  StreamBuilder<DocumentSnapshot>(
+//                  stream: db
+//                      .document(
+//                      '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
+//                      .snapshots(),
+//                  builder: (context, snapshot) {
+//                    if (snapshot.connectionState == ConnectionState.active) {
+//                      if (snapshot.data.exists) {
+//                        return Text(snapshot.data.data['points']);
+//                      }
+//                      else{return SizedBox();}
+//                    } else {
+//                      return SizedBox();
+//                    }
+//                  },
+//                ),
+//                onPressed: () {
+//                  /* ... */
+//                },
+//              ),
+//            ],
+//          ),
+////             gUj5ARd2rDdCaf7cQvSGeaziBWr1'
+//          StreamBuilder<DocumentSnapshot>(
+//            stream: db
+//                .document(
+//                    '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
+//                .snapshots(),
+//            builder: (context, snapshot) {
+//              if (snapshot.connectionState == ConnectionState.active) {
+//                if (snapshot.data.exists) {
+//                  return Text(snapshot.data.data['points']);
+//                }
+//                else{return SizedBox();}
+//              } else {
+//                return SizedBox();
+//              }
+//            },
+//          ),
+//        ],
+//      ),
+//    );
+
+
 
   Widget buildItem(DocumentSnapshot doc) {
-    return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.album),
-            title: Text(doc['name']),
-            subtitle: Text(doc['type']),
-          ),
-          ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                child: const Text('View Info'),
-                onPressed: () {
-                  /* ... */
-                },
+
+//    print(FirebaseStorage().ref().child('{$doc.documentID}.jpg').getDownloadURL().toString());
+     return Padding(padding: EdgeInsets.all(2.0),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black12,
+                  spreadRadius: 2.0,
+                  blurRadius: 5.0
               ),
-              FlatButton(
-                color: Colors.redAccent,
-                child:  StreamBuilder<DocumentSnapshot>(
-                  stream: db
-                      .document(
-                      '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.data.exists) {
-                        return Text(snapshot.data.data['points']);
-                      }
-                      else{return SizedBox();}
-                    } else {
-                      return SizedBox();
-                    }
-                  },
-                ),
-                onPressed: () {
-                  /* ... */
-                },
-              ),
-            ],
-          ),
-//             gUj5ARd2rDdCaf7cQvSGeaziBWr1'
-          StreamBuilder<DocumentSnapshot>(
-            stream: db
-                .document(
-                    '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.data.exists) {
-                  return Text(snapshot.data.data['points']);
+            ]
+        ),
+        margin: EdgeInsets.all(5.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            FutureBuilder(
+              future: FirebaseStorage().ref().child(doc.documentID).getDownloadURL(),
+              builder:(context,snapshot){
+                print('1');
+                if(snapshot.connectionState==ConnectionState.done) {
+                  print('2');
+                  return  ClipRRect(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),bottomLeft: Radius.circular(10.0)),
+                    child: Image.network(snapshot.data.toString(),width: 80,height: 80,fit: BoxFit.cover,),
+                  );
                 }
-                else{return SizedBox();}
-              } else {
-                return SizedBox();
-              }
-            },
-          ),
-        ],
-      ),
-    );
+                else if (snapshot.connectionState ==
+                    ConnectionState.waiting)
+                  return Container(
+                      height: MediaQuery.of(context).size.height /
+                          1.25,
+                      width: MediaQuery.of(context).size.width /
+                          1.25,
+                      child: CircularProgressIndicator());
+
+                else return Container();
+
+
+
+              }  ,
+            )
+
+
+
+
+
+
+            ,
+            SizedBox(
+              width: 250,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(doc.data['name']),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0,bottom: 2.0),
+                      child: Text(doc.data['type'],overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 12.0,color: Colors.black54,),maxLines: 1,),
+                    ),
+//                    Text("Min. Order: ${object["minOrder"]}",style: TextStyle(fontSize: 12.0,color: Colors.black54),)
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),);
+
+
+
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(
           title: Text('All Restaurants'),
           centerTitle: true,
@@ -169,14 +254,17 @@ String userpoints;
 //                ),
 //              ],
 //            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: db.collection('restaurantData').snapshots(),
+             StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('restaurantData').snapshots(),
               builder: (context, snapshot) {
+                print(snapshot.connectionState);
+                print(snapshot.hasData);
+
                 if (snapshot.hasData &&
                     snapshot.connectionState == ConnectionState.active) {
-//                  print('yoyoyoy');
+                  print('yoyoyoy');
 
-                  return Column(
+                  return ListView(
                       children: snapshot.data.documents
                           .map((doc) => buildItem(doc))
                           .toList());
