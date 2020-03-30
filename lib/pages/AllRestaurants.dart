@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loyaltyappversion2/firebase_services/authentication.dart';
 import 'package:loyaltyappversion2/firebase_services/database.dart';
 import 'package:loyaltyappversion2/actors/user.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AllRestaurants extends StatefulWidget {
   @override
@@ -11,79 +12,91 @@ class AllRestaurants extends StatefulWidget {
 
 class _AllRestaurantsState extends State<AllRestaurants> {
   final db = Firestore.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
 
-
+  String imageurl;
 String userpoints;
 
-  toto(DocumentSnapshot doc) {
+//  toto(DocumentSnapshot doc) {
 //    QuerySnapshot poc= await db.collection('userData').where('email',isEqualTo:'123@gmail.com').getDocuments();
 //    DocumentSnapshot dodo = poc.documents[0];
 //    print(dodo.documentID);
 //String docID=doc.documentID;
 //Stream <DocumentSnapshot> customerSnapshot=  db.document('/restaurantData/${docID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1').snapshots();
 //print(customerSnapshot.);
+
+  void mama(String docid) async{
+    var a =await storage.ref().child('/restaurant01.jpg').getDownloadURL();
+    imageurl = a.toString();
   }
 
   Widget buildItem(DocumentSnapshot doc) {
+//    mama(doc.documentID);
+  print(doc.documentID);
+mama(doc.documentID);
+
     return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.album),
-            title: Text(doc['name']),
-            subtitle: Text(doc['type']),
-          ),
-          ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                child: const Text('View Info'),
-                onPressed: () {
-                  /* ... */
-                },
-              ),
-              FlatButton(
-                color: Colors.redAccent,
-                child:  StreamBuilder<DocumentSnapshot>(
-                  stream: db
-                      .document(
-                      '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.data.exists) {
-                        return Text(snapshot.data.data['points']);
-                      }
-                      else{return SizedBox();}
-                    } else {
-                      return SizedBox();
-                    }
+      child: Stack(
+        children: [Image.network
+          Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.album),
+              title: Text(doc['name']),
+              subtitle: Text(doc['type']),
+            ),
+            ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  child: const Text('View Info'),
+                  onPressed: () {
+                    /* ... */
                   },
                 ),
-                onPressed: () {
-                  /* ... */
-                },
-              ),
-            ],
-          ),
+                FlatButton(
+                  color: Colors.redAccent,
+                  child:  StreamBuilder<DocumentSnapshot>(
+                    stream: db
+                        .document(
+                        '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.active) {
+                        if (snapshot.data.exists) {
+                          return Text(snapshot.data.data['points']);
+                        }
+                        else{return SizedBox();}
+                      } else {
+                        return SizedBox();
+                      }
+                    },
+                  ),
+                  onPressed: () {
+                    /* ... */
+                  },
+                ),
+              ],
+            ),
 //             gUj5ARd2rDdCaf7cQvSGeaziBWr1'
-          StreamBuilder<DocumentSnapshot>(
-            stream: db
-                .document(
-                    '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.data.exists) {
-                  return Text(snapshot.data.data['points']);
+            StreamBuilder<DocumentSnapshot>(
+              stream: db
+                  .document(
+                      '/restaurantData/${doc.documentID}/customers/gUj5ARd2rDdCaf7cQvSGeaziBWr1')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.data.exists) {
+                    return Text(snapshot.data.data['points']);
+                  }
+                  else{return SizedBox();}
+                } else {
+                  return SizedBox();
                 }
-                else{return SizedBox();}
-              } else {
-                return SizedBox();
-              }
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        )],
       ),
     );
   }
